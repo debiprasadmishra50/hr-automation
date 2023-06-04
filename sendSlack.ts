@@ -1,6 +1,4 @@
-import "dotenv/config";
 import { WebClient } from "@slack/web-api";
-// import { BOT_OAUTH_TOKEN, GENERAL_CHANNEL_ID, USER_OAUTH_TOKEN } from "./constants";
 
 // Create a new instance of WebClient with your Slack API credentials
 const slack = new WebClient(process.env.BOT_OAUTH_TOKEN);

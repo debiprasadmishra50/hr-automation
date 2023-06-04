@@ -39,14 +39,6 @@ async function main(): Promise<void> {
       title_data,
     ]);
 
-    // BUG: remove Dummy Data
-    // empId.push("700");
-    // fullName.push("Debi Mishra");
-    // email.push("vicky@rapid.com");
-    // dob.push(getCurrentDate().concat("-2023"));
-    // doj.push(getCurrentDate().concat("-2023"));
-    // title.push("Owner");
-
     const dobIndexes: number[] = findStringOccurrences(dob, getCurrentDate());
     const dojIndexes: number[] = findStringOccurrences(doj, getCurrentDate());
 

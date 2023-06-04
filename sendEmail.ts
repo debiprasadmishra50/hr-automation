@@ -1,37 +1,16 @@
-import "dotenv/config";
 import { Transporter, createTransport } from "nodemailer";
 import { readFileSync } from "fs";
 import Mail from "nodemailer/lib/mailer";
-// import {
-//   SMTP_PASSWORD,
-//   SMTP_PORT,
-//   SMTP_SERVER,
-//   SMTP_USER,
-//   TEST_PASSWORD,
-//   TEST_PORT,
-//   TEST_SMTP_SERVER,
-//   TEST_USER,
-// } from "./constants";
 
 /**
  * Creates an SMTP transport using the provided configuration.
  * @returns An SMTP transporter instance.
  */
 const createSMTPTransport = (): Transporter => {
-  // Create a transporter using SMTP configuration
-  // return createTransport({
-  //   host: TEST_SMTP_SERVER,
-  //   port: TEST_PORT,
-  //   auth: {
-  //     user: TEST_USER,
-  //     pass: TEST_PASSWORD,
-  //   },
-  // });
   try {
     return createTransport({
       host: process.env.SMTP_SERVER,
       port: 465,
-      // service: "gmail",
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASSWORD,
@@ -71,10 +50,8 @@ export async function sendDOBEmail(
 
     // Configure the email details
     const mailOptions: Mail.Options = {
-      // from: "debi@mail.com",
       from: process.env.SMTP_USER,
       to: email,
-      // to: "debi@rapidinnovation.dev",
       subject: `Happy Birthday! ${fullName}`,
       text: emailTemplate,
       html: emailTemplate,
@@ -119,10 +96,8 @@ export async function sendDOJEmail(
 
     // Configure the email details
     const mailOptions: Mail.Options = {
-      // from: "debi@mail.com",
       from: process.env.SMTP_USER,
       to: email,
-      // to: "debi@rapidinnovation.dev",
       subject: `Congratulations on Your Work Anniversary! ${fullName}`,
       text: emailTemplate,
       html: emailTemplate,
