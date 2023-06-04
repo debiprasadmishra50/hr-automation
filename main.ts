@@ -30,8 +30,6 @@ async function main(): Promise<void> {
       sheets
     );
 
-    console.log("[+] Successfully fetched sheets data");
-
     const [empId, fullName, email, dob, doj, title] = flatten([
       empId_data,
       fullName_data,
