@@ -79,6 +79,11 @@ const dobAndDoj = schedule("0 9 * * *", async () => {
   await main();
 });
 
+const test = schedule("2 * * * * *", async () => {
+  console.log("[+] Cron DOB+DOJ running at 09:00AM");
+});
+test.start();
+
 // qod.start();
 // dobAndDoj.start();
 
