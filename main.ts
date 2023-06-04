@@ -42,6 +42,7 @@ async function main(): Promise<void> {
     const dobIndexes: number[] = findStringOccurrences(dob, getCurrentDate());
     const dojIndexes: number[] = findStringOccurrences(doj, getCurrentDate());
 
+    // send DOB Emails
     if (dobIndexes.length) sendDOB(dobIndexes, quotes, fullName, email).catch(console.error);
     // if (dojIndexes.length) sendDOJ(dojIndexes, fullName, email, title, doj).catch(console.error);
   } catch (error) {
