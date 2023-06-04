@@ -53,7 +53,7 @@ async function main(): Promise<void> {
   }
 }
 
-// main();
+main();
 
 async function sendQOD() {
   let qod = await getQuoteOfTheDay();
@@ -82,7 +82,7 @@ const dobAndDoj = schedule("0 9 * * *", async () => {
 const test = schedule("*/2 * * * * *", async () => {
   console.log("[+] Cron DOB+DOJ running at 09:00AM");
 });
-test.start();
+// test.start();
 
 // qod.start();
 // dobAndDoj.start();
