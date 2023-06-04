@@ -1,6 +1,6 @@
 import axios from "axios";
 import { sheets_v4 } from "googleapis";
-import { NINJA_API_KEY, QUOTE_API_KEY, SPREADSHEET_ID } from "./constants";
+// import { NINJA_API_KEY, QUOTE_API_KEY, SPREADSHEET_ID } from "./constants";
 import { sendDOBEmail, sendDOJEmail } from "./sendEmail";
 import { sendSlackMessage } from "./sendSlack";
 
@@ -12,27 +12,27 @@ import { sendSlackMessage } from "./sendSlack";
  */
 export async function fetchData(sheets: sheets_v4.Sheets): Promise<any[]> {
   let empId_col = sheets.spreadsheets.values.get({
-    spreadsheetId: SPREADSHEET_ID,
+    spreadsheetId: process.env.SPREADSHEET_ID,
     range: "Sheet1!A:A", // specify the sheet name and range to read
   });
   let fullName_col = sheets.spreadsheets.values.get({
-    spreadsheetId: SPREADSHEET_ID,
+    spreadsheetId: process.env.SPREADSHEET_ID,
     range: "Sheet1!B:B", // specify the sheet name and range to read
   });
   let email_col = sheets.spreadsheets.values.get({
-    spreadsheetId: SPREADSHEET_ID,
+    spreadsheetId: process.env.SPREADSHEET_ID,
     range: "Sheet1!C:C", // specify the sheet name and range to read
   });
   let dob_col = sheets.spreadsheets.values.get({
-    spreadsheetId: SPREADSHEET_ID,
+    spreadsheetId: process.env.SPREADSHEET_ID,
     range: "Sheet1!D:D", // specify the sheet name and range to read
   });
   let doj_col = sheets.spreadsheets.values.get({
-    spreadsheetId: SPREADSHEET_ID,
+    spreadsheetId: process.env.SPREADSHEET_ID,
     range: "Sheet1!E:E", // specify the sheet name and range to read
   });
   let title_col = sheets.spreadsheets.values.get({
-    spreadsheetId: SPREADSHEET_ID,
+    spreadsheetId: process.env.SPREADSHEET_ID,
     range: "Sheet1!F:F", // specify the sheet name and range to read
   });
 
@@ -127,7 +127,7 @@ export async function getQuoteOfTheDay() {
   try {
     const res = await axios.get("https://quotes.rest/qod?language=en&category=inspire", {
       headers: {
-        "X-TheySaidSo-Api-Secret": QUOTE_API_KEY,
+        "X-TheySaidSo-Api-Secret": process.env.QUOTE_API_KEY,
       },
     });
 
@@ -154,7 +154,7 @@ export async function getQuotes(category: string) {
   try {
     const res = await axios.get(`https://api.api-ninjas.com/v1/quotes?category=${category}&limit=5`, {
       headers: {
-        "X-Api-Key": NINJA_API_KEY,
+        "X-Api-Key": process.env.NINJA_API_KEY,
       },
     });
 

@@ -1,16 +1,16 @@
 import { Transporter, createTransport } from "nodemailer";
 import { readFileSync } from "fs";
 import Mail from "nodemailer/lib/mailer";
-import {
-  SMTP_PASSWORD,
-  SMTP_PORT,
-  SMTP_SERVER,
-  SMTP_USER,
-  TEST_PASSWORD,
-  TEST_PORT,
-  TEST_SMTP_SERVER,
-  TEST_USER,
-} from "./constants";
+// import {
+//   SMTP_PASSWORD,
+//   SMTP_PORT,
+//   SMTP_SERVER,
+//   SMTP_USER,
+//   TEST_PASSWORD,
+//   TEST_PORT,
+//   TEST_SMTP_SERVER,
+//   TEST_USER,
+// } from "./constants";
 
 /**
  * Creates an SMTP transport using the provided configuration.
@@ -28,12 +28,12 @@ const createSMTPTransport = (): Transporter => {
   // });
   try {
     return createTransport({
-      host: SMTP_SERVER,
+      host: process.env.SMTP_SERVER,
       port: 465,
       // service: "gmail",
       auth: {
-        user: SMTP_USER,
-        pass: SMTP_PASSWORD,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD,
       },
     });
   } catch (err) {
@@ -71,7 +71,7 @@ export async function sendDOBEmail(
     // Configure the email details
     const mailOptions: Mail.Options = {
       // from: "debi@mail.com",
-      from: SMTP_USER,
+      from: process.env.SMTP_USER,
       to: email,
       // to: "debi@rapidinnovation.dev",
       subject: `Happy Birthday! ${fullName}`,
@@ -119,13 +119,12 @@ export async function sendDOJEmail(
     // Configure the email details
     const mailOptions: Mail.Options = {
       // from: "debi@mail.com",
-      from: "debi@rapidinnovation.dev",
-      // to: email,
-      to: "debi@rapidinnovation.dev",
+      from: process.env.SMTP_USER,
+      to: email,
+      // to: "debi@rapidinnovation.dev",
       subject: `Congratulations on Your Work Anniversary! ${fullName}`,
       text: emailTemplate,
       html: emailTemplate,
-      cc: "teamhr@rapidinnovation.dev",
     };
 
     // Send the email

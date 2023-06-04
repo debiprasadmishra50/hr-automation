@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { google, sheets_v4 } from "googleapis";
 import { JWT } from "google-auth-library";
 import {
@@ -16,7 +17,7 @@ import { schedule } from "node-cron";
 
 async function main(): Promise<void> {
   const auth = new JWT({
-    keyFile: "./automate-hr-387920-48e0106c5af1.json",
+    keyFile: `./${process.env.GOOGLE_KEY_FILE}`,
     scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
   });
 
