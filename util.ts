@@ -1,3 +1,4 @@
+import "dotenv/config";
 import axios from "axios";
 import { sheets_v4 } from "googleapis";
 // import { NINJA_API_KEY, QUOTE_API_KEY, SPREADSHEET_ID } from "./constants";

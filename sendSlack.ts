@@ -1,15 +1,16 @@
+import "dotenv/config";
 import { WebClient } from "@slack/web-api";
-import { BOT_OAUTH_TOKEN, GENERAL_CHANNEL_ID, USER_OAUTH_TOKEN } from "./constants";
+// import { BOT_OAUTH_TOKEN, GENERAL_CHANNEL_ID, USER_OAUTH_TOKEN } from "./constants";
 
 // Create a new instance of WebClient with your Slack API credentials
-const slack = new WebClient(BOT_OAUTH_TOKEN);
+const slack = new WebClient(process.env.BOT_OAUTH_TOKEN);
 
 // export async function sendSlackMessage(channel: string, message: string): Promise<void> {
 export async function sendSlackMessage(message: string): Promise<void> {
   try {
     // Call the chat.postMessage method to send a message to the channel
     const response = await slack.chat.postMessage({
-      channel: GENERAL_CHANNEL_ID,
+      channel: process.env.GENERAL_CHANNEL_ID,
       text: message,
       //   as_user: true,
     });
@@ -50,7 +51,7 @@ export async function sendSlackMessage(message: string): Promise<void> {
 export async function deleteMessage(ts: string) {
   try {
     const res = await slack.chat.delete({
-      channel: GENERAL_CHANNEL_ID,
+      channel: process.env.GENERAL_CHANNEL_ID,
       ts,
     });
 

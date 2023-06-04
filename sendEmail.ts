@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { Transporter, createTransport } from "nodemailer";
 import { readFileSync } from "fs";
 import Mail from "nodemailer/lib/mailer";
