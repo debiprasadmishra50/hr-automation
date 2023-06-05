@@ -6,6 +6,6 @@ CommonPipelineNew(
         dockerRegistry: "rapiddevops/hr-automation-debi",
         namespace: "hr-automation-dev",
         dpName: "hr-automation-dp", 
-        podName: "hr-automation-dp",
+        podName: "hr-automation",
         projectName: "hr-automation"
         )
