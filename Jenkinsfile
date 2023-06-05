@@ -5,7 +5,7 @@ CommonPipelineNew(
         gitCred: "git-cred",
         dockerRegistry: "rapiddevops/hr-automation-debi",
         namespace: "hr-automation-dev",
-        dpName: "hr-api-dp", 
-        podName: "hr-api",
-        projectName: "hr"
+        dpName: "hr-automation-dp", 
+        podName: "hr-automation-dp",
+        projectName: "hr-automation"
         )
