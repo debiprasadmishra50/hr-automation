@@ -4,7 +4,7 @@ CommonPipelineNew(
         clusterName: "nonprod-rapidinnovation-eks",
         gitCred: "git-cred",
         dockerRegistry: "rapiddevops/hr-automation-debi",
-        namespace: "hr-dev",
+        namespace: "hr-automation-dev",
         dpName: "hr-api-dp", 
         podName: "hr-api",
         projectName: "hr"
