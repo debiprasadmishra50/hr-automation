@@ -44,14 +44,12 @@ async function main(): Promise<void> {
 
     // send DOB Emails
     if (dobIndexes.length) sendDOB(dobIndexes, quotes, fullName, email).catch(console.error);
-    // if (dojIndexes.length) sendDOJ(dojIndexes, fullName, email, title, doj).catch(console.error);
+    if (dojIndexes.length) sendDOJ(dojIndexes, fullName, email, title, doj).catch(console.error);
   } catch (error) {
     console.error("[-] Error reading Google Sheets:", error);
     // console.error("[-] Error:", error.errors[0].message);
   }
 }
-
-main();
 
 async function sendQOD() {
   let qod = await getQuoteOfTheDay();
@@ -76,6 +74,9 @@ const dobAndDoj = schedule("0 9 * * *", async () => {
 
   await main();
 });
+
+qod.start();
+dobAndDoj.start();
 
 // qod.start();
 // dobAndDoj.start();

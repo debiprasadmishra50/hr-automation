@@ -63,10 +63,10 @@ export async function sendDOB(dobIndexes: number[], quotes: string[], fullName: 
 
     await sendDOBEmail(fullName[i], email[i], formatString(quote), chosenTemp).catch(console.error);
 
-    // await sendSlackMessage(`Happy Birthday ${fullName[i]} :birthday: :tada: :cake: :confetti_ball:
-    //     \nHope this message will glorify this marvellous day!
-    //     \n${quote}
-    //     \nEnjoy the day ${fullName[i].split(" ")[0]}`).catch(console.error);
+    await sendSlackMessage(`Happy Birthday ${fullName[i]} :birthday: :tada: :cake: :confetti_ball:
+        \nHope this message will glorify this marvellous day!
+        \n${quote}
+        \nEnjoy the day ${fullName[i].split(" ")[0]}`).catch(console.error);
 
     // // console.log(`Happy Birthday ${fullName[i]} :birthday: :tada: :cake: :confetti_ball:
     // //     \nHope this message will glorify this marvellous day!
