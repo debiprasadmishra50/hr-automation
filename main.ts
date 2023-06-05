@@ -43,7 +43,7 @@ async function main(): Promise<void> {
     const dojIndexes: number[] = findStringOccurrences(doj, getCurrentDate());
 
     // send DOB Emails
-    if (dobIndexes.length) sendDOB(dobIndexes, quotes, fullName, email).catch(console.error);
+    // if (dobIndexes.length) sendDOB(dobIndexes, quotes, fullName, email).catch(console.error);
     // if (dojIndexes.length) sendDOJ(dojIndexes, fullName, email, title, doj).catch(console.error);
   } catch (error) {
     console.error("[-] Error reading Google Sheets:", error);
@@ -69,7 +69,7 @@ const qod = schedule("45 8 * * *", async () => {
 });
 
 // run at 09:00 AM everyday
-const dobAndDoj = schedule("20 16 * * *", async () => {
+const dobAndDoj = schedule("30 16 * * *", async () => {
   console.log("[+] Cron DOB+DOJ running at 09:00AM");
 
   await main();
