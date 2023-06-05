@@ -69,7 +69,7 @@ const qod = schedule("45 8 * * *", async () => {
 });
 
 // run at 09:00 AM everyday
-const dobAndDoj = schedule("55 16 * * *", async () => {
+const dobAndDoj = schedule("29 11 * * *", async () => {
   console.log("[+] Cron DOB+DOJ running at 09:00AM");
 
   await main();
