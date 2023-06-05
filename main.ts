@@ -43,7 +43,7 @@ async function main(): Promise<void> {
     const dojIndexes: number[] = findStringOccurrences(doj, getCurrentDate());
 
     // send DOB Emails
-    // if (dobIndexes.length) sendDOB(dobIndexes, quotes, fullName, email).catch(console.error);
+    if (dobIndexes.length) sendDOB(dobIndexes, quotes, fullName, email).catch(console.error);
     // if (dojIndexes.length) sendDOJ(dojIndexes, fullName, email, title, doj).catch(console.error);
   } catch (error) {
     console.error("[-] Error reading Google Sheets:", error);
