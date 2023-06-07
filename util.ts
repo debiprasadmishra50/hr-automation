@@ -65,8 +65,8 @@ export async function sendDOB(dobIndexes: number[], quotes: string[], fullName: 
 
     await sendSlackMessage(`Happy Birthday ${fullName[i]} :birthday: :tada: :cake: :confetti_ball:
         \nHope this message will glorify this marvellous day!
-        \n${quote}
-        \nEnjoy the day ${fullName[i].split(" ")[0]}`).catch(console.error);
+        \n${formatString(quote, 80, 15)}
+        \nEnjoy the day ${fullName[i].split(" ")[0]}!`).catch(console.error);
 
     // // console.log(`Happy Birthday ${fullName[i]} :birthday: :tada: :cake: :confetti_ball:
     // //     \nHope this message will glorify this marvellous day!
@@ -249,10 +249,10 @@ export function wait(secs: number): Promise<boolean> {
  * @param str The string to be formatted.
  * @returns The formatted string with proper borders, center alignment, and word wrapping.
  */
-export function formatString(str: string): string {
+export function formatString(str: string, maxLineLength = 120, maxWordsPerLine = 28): string {
   // Maximum line length and words per line
-  const maxLineLength = 120;
-  const maxWordsPerLine = 28;
+  // const maxLineLength = 120;
+  // const maxWordsPerLine = 28;
   // Border character
   const borderChar = "#";
 

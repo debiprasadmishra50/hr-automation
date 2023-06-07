@@ -51,10 +51,12 @@ async function main(): Promise<void> {
   }
 }
 
+// main();
+
 async function sendQOD() {
   let qod = await getQuoteOfTheDay();
 
-  qod = formatString(qod);
+  qod = formatString(qod, 80, 15);
 
   await sendSlackMessage(`Dear Team, Good Morning!
         \nToday's Thought
