@@ -1,7 +1,10 @@
-import { WebClient } from "@slack/web-api";
+import "dotenv/config";
+import { WebClient, WebAPICallResult } from "@slack/web-api";
+import { createEventAdapter } from "@slack/events-api";
 
 // Create a new instance of WebClient with your Slack API credentials
 const slack = new WebClient(process.env.BOT_OAUTH_TOKEN);
+const slackEvents = createEventAdapter(process.env.SIGNING_SECRET);
 
 // export async function sendSlackMessage(channel: string, message: string): Promise<void> {
 export async function sendSlackMessage(message: string): Promise<void> {
@@ -58,3 +61,24 @@ export async function deleteMessage(ts: string) {
     console.error("[-] Error sending message:", error);
   }
 }
+
+// const port = +process.env.PORT || 3000;
+// // Start the server
+// slackEvents.start(port).then(() => {
+//   console.log(`[+] Slack Server listening on port ${port}`);
+// });
+
+// // Listen for 'message' events
+// slackEvents.on("message", async (event) => {
+//   if (event.type === "message" && event.text && event.text.startsWith("/im")) {
+//     const inputText = event.text.substring(4).trim(); // Extract the text after '/im'
+
+//     const responseText = inputText.toUpperCase(); // Convert the input text to uppercase
+
+//     // Send the response back to the Slack channel
+//     await slack.chat.postMessage({
+//       channel: event.channel,
+//       text: responseText,
+//     });
+//   }
+// });

@@ -11,11 +11,11 @@ import {
   formatString,
   sendDOB,
   sendDOJ,
-} from "./util";
-import { deleteMessage, sendSlackMessage } from "./sendSlack";
+} from "./src/utils/util";
+import { deleteMessage, sendSlackMessage } from "./src/utils/sendSlack";
 import { schedule } from "node-cron";
 
-async function main(): Promise<void> {
+export async function main(): Promise<void> {
   const auth = new JWT({
     keyFile: `./${process.env.GOOGLE_KEY_FILE}`,
     scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
@@ -43,8 +43,8 @@ async function main(): Promise<void> {
     const dojIndexes: number[] = findStringOccurrences(doj, getCurrentDate());
 
     // send DOB Emails
-    if (dobIndexes.length) sendDOB(dobIndexes, quotes, fullName, email).catch(console.error);
-    if (dojIndexes.length) sendDOJ(dojIndexes, fullName, email, title, doj).catch(console.error);
+    // if (dobIndexes.length) sendDOB(dobIndexes, quotes, fullName, email).catch(console.error);
+    // if (dojIndexes.length) sendDOJ(dojIndexes, fullName, email, title, doj).catch(console.error);
   } catch (error) {
     console.error("[-] Error reading Google Sheets:", error);
     // console.error("[-] Error:", error.errors[0].message);
@@ -53,7 +53,7 @@ async function main(): Promise<void> {
 
 // main();
 
-async function sendQOD() {
+export async function sendQOD() {
   let qod = await getQuoteOfTheDay();
 
   qod = formatString(qod, 80, 15);
