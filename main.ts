@@ -43,8 +43,8 @@ export async function main(): Promise<void> {
     const dojIndexes: number[] = findStringOccurrences(doj, getCurrentDate());
 
     // send DOB Emails
-    // if (dobIndexes.length) sendDOB(dobIndexes, quotes, fullName, email).catch(console.error);
-    // if (dojIndexes.length) sendDOJ(dojIndexes, fullName, email, title, doj).catch(console.error);
+    if (dobIndexes.length) sendDOB(dobIndexes, quotes, fullName, email).catch(console.error);
+    if (dojIndexes.length) sendDOJ(dojIndexes, fullName, email, title, doj).catch(console.error);
   } catch (error) {
     console.error("[-] Error reading Google Sheets:", error);
     // console.error("[-] Error:", error.errors[0].message);
@@ -63,23 +63,23 @@ export async function sendQOD() {
         \n${qod}`);
 }
 
-// run at 08:45 AM everyday
-const qod = schedule("15 3 * * *", async () => {
-  console.log("[+] Cron QOD running at 08:45AM");
+// // run at 08:45 AM everyday
+// const qod = schedule("15 3 * * *", async () => {
+//   console.log("[+] Cron QOD running at 08:45AM");
 
-  await sendQOD();
-});
+//   await sendQOD();
+// });
 
-// run at 09:00 AM everyday
-// UTC Time
-const dobAndDoj = schedule("30 3 * * *", async () => {
-  console.log("[+] Cron DOB+DOJ running at 09:00AM");
+// // run at 09:00 AM everyday
+// // UTC Time
+// const dobAndDoj = schedule("30 3 * * *", async () => {
+//   console.log("[+] Cron DOB+DOJ running at 09:00AM");
 
-  await main();
-});
+//   await main();
+// });
 
-qod.start();
-dobAndDoj.start();
+// qod.start();
+// dobAndDoj.start();
 
 // deleteMessage("1685572812.823279");
 
