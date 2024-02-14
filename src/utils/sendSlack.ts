@@ -35,7 +35,7 @@ export async function sendSlackMessage(message: string): Promise<void> {
     console.log("[+] Slack Message sent successfully");
     console.log("[+] Slack Message Response:", response.ok, "\tTS:", response.ts);
   } catch (error) {
-    console.error("[-] Error sending message:", error);
+    console.error("[-] Error sending slack message:", error);
   }
 }
 

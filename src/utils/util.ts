@@ -35,16 +35,20 @@ export async function fetchData(sheets: sheets_v4.Sheets): Promise<any[]> {
     range: "Sheet1!F:F", // specify the sheet name and range to read
   });
 
-  let [empId, fullName, email, dob, doj, title] = await Promise.all([
-    empId_col,
-    fullName_col,
-    email_col,
-    dob_col,
-    doj_col,
-    title_col,
-  ]);
+  try {
+    let [empId, fullName, email, dob, doj, title] = await Promise.all([
+      empId_col,
+      fullName_col,
+      email_col,
+      dob_col,
+      doj_col,
+      title_col,
+    ]);
 
-  return [empId, fullName, email, dob, doj, title];
+    return [empId, fullName, email, dob, doj, title];
+  } catch (err) {
+    console.error("[-] Error getting Spreadsheet Data", err.message);
+  }
 }
 
 /**
@@ -55,25 +59,34 @@ export async function fetchData(sheets: sheets_v4.Sheets): Promise<any[]> {
  * @param fullName - An array of employees' full names.
  * @param email - An array of employees' email addresses.
  */
-export async function sendDOB(dobIndexes: number[], quotes: string[], fullName: string[], email: string[]) {
-  for (const i of dobIndexes) {
-    const chosenTemp = generateRandomNumber(1, 5);
+export async function sendDOB(dobIndexes: number[], fullName: string[], email: string[]) {
+  try {
+    for (const i of dobIndexes) {
+      const chosenTemp = generateRandomNumber(1, 5);
+      const quote: string = await getQuotes("inspirational");
 
-    const quote = quotes[i <= 4 ? i : i % 4];
+      // const quote = quotes[i <= 4 ? i : i % 4];
 
-    await sendDOBEmail(fullName[i], email[i], formatString(quote), chosenTemp).catch(console.error);
+      // console.log({ quote: `${quote}` });
+      // console.log(fullName[i], email[i], { chosenTemp });
+      // console.log(formatString(quote));
 
-    await sendSlackMessage(`Happy Birthday ${fullName[i]} :birthday: :tada: :cake: :confetti_ball:
-        \nHope this message will glorify this marvellous day!
-        \n${formatString(quote, 80, 15)}
-        \nEnjoy the day ${fullName[i].split(" ")[0]}!`).catch(console.error);
+      await sendDOBEmail(fullName[i], email[i], formatString(quote), chosenTemp).catch(console.error);
 
-    // // console.log(`Happy Birthday ${fullName[i]} :birthday: :tada: :cake: :confetti_ball:
-    // //     \nHope this message will glorify this marvellous day!
-    // //     \n${quote}
-    // //     \nEnjoy the day ${fullName[i].split(" ")[0]}`);
+      await sendSlackMessage(`Happy Birthday ${fullName[i]} :birthday: :tada: :cake: :confetti_ball:
+          \nHope this message will glorify this marvellous day!
+          \n${formatString(quote, 80, 15)}
+          \nEnjoy the day ${fullName[i].split(" ")[0]}!`).catch(console.error);
 
-    // await wait(1);
+      // console.log(`Happy Birthday ${fullName[i]} :birthday: :tada: :cake: :confetti_ball:
+      //   \nHope this message will glorify this marvellous day!
+      //   \n${quote}
+      //   \nEnjoy the day ${fullName[i].split(" ")[0]}`);
+
+      await wait(1);
+    }
+  } catch (err) {
+    console.error("[-] Error sending DOB Emails or slack wishes", err.message);
   }
 }
 
@@ -93,25 +106,29 @@ export async function sendDOJ(
   curTitle: string[],
   doj: string[]
 ) {
-  const name: string[] = [];
+  try {
+    const name: string[] = [];
 
-  for (const i of dojIndexes) {
-    const chosenTemp = generateRandomNumber(1, 5);
+    for (const i of dojIndexes) {
+      const chosenTemp = generateRandomNumber(1, 5);
 
-    await sendDOJEmail(fullName[i], email[i], curTitle[i], doj[i], chosenTemp).catch(console.error);
+      await sendDOJEmail(fullName[i], email[i], curTitle[i], doj[i], chosenTemp).catch(console.error);
 
-    name.push(fullName[i]);
+      name.push(fullName[i]);
 
-    // // console.log(`Congratulations on your Work Anniversary ${fullName[i]} ${fullName[i]} :technologist: :saluting_face: :clap: :partying_face: :confetti_ball:
-    // //   \nEnjoy the day with a great smile on your face and wish you having more fun with us for upcoming years.`);
+      // console.log(`Congratulations on your Work Anniversary ${fullName[i]} :technologist: :saluting_face: :clap: :partying_face: :confetti_ball:
+      // \nEnjoy the day with a great smile on your face and wish you having more fun with us for upcoming years.`);
+    }
+
+    await sendSlackMessage(`Congratulations on your Work Anniversary ${name.join(
+      ", "
+    )} :technologist: :saluting_face: :clap: :partying_face: :confetti_ball:
+            \nEnjoy the day with a great smile on your face and wish you having more fun with us for upcoming years.`).catch(
+      console.error
+    );
+  } catch (err) {
+    console.log("[-] Error occurred while sending DOJ Emails or sendin slack messages", err.message);
   }
-
-  await sendSlackMessage(`Congratulations on your Work Anniversary ${name.join(
-    ", "
-  )} :technologist: :saluting_face: :clap: :partying_face: :confetti_ball:
-          \nEnjoy the day with a great smile on your face and wish you having more fun with us for upcoming years.`).catch(
-    console.error
-  );
 }
 
 /**
@@ -148,25 +165,25 @@ type Cur = { quote: string; author: string; category: string };
  */
 export async function getQuotes(category: string) {
   try {
-    const res = await axios.get(`https://api.api-ninjas.com/v1/quotes?category=${category}&limit=5`, {
+    const res = await axios.get(`https://api.api-ninjas.com/v1/quotes?category=${category}`, {
       headers: {
         "X-Api-Key": process.env.NINJA_API_KEY,
       },
     });
 
-    const quotes: string[] = res.data.reduce((acc: string[], cur: Cur, i: number) => {
-      acc.push(cur.quote);
+    // const quote: string = res.data.reduce((acc: string[], cur: Cur, i: number) => {
+    //   acc.push(cur.quote);
 
-      return acc;
-    }, []);
+    //   return acc;
+    // }, []);
 
     // writeFileSync("./templates/quote.txt", quotes.join("\n"), { encoding: "utf-8" });
 
     console.log("[+] Successfully fetched quotes", getCurrentDate());
 
-    return quotes;
+    return res.data[0].quote;
   } catch (err) {
-    console.log("[-] Error getting today's quote:", err.message);
+    console.error("[-] Error getting today's quote:", err.message);
   }
 }
 
