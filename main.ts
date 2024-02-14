@@ -11,6 +11,7 @@ import {
   formatString,
   sendDOB,
   sendDOJ,
+  generateRandomNumber,
 } from "./src/utils/util";
 import { deleteMessage, sendSlackMessage } from "./src/utils/sendSlack";
 import { schedule } from "node-cron";
@@ -24,7 +25,7 @@ export async function main(): Promise<void> {
   const sheets: sheets_v4.Sheets = google.sheets({ version: "v4", auth });
 
   try {
-    const quotes = await getQuotes("inspirational");
+    // const quote: string = await getQuotes("inspirational");
 
     const [empId_data, fullName_data, email_data, dob_data, doj_data, title_data]: any[] = await fetchData(
       sheets
@@ -39,11 +40,15 @@ export async function main(): Promise<void> {
       title_data,
     ]);
 
-    const dobIndexes: number[] = findStringOccurrences(dob, getCurrentDate());
-    const dojIndexes: number[] = findStringOccurrences(doj, getCurrentDate());
+    const curDate = getCurrentDate();
+
+    const dobIndexes: number[] = findStringOccurrences(dob, curDate);
+    const dojIndexes: number[] = findStringOccurrences(doj, curDate);
+
+    // console.log(dobIndexes);
 
     // send DOB Emails
-    if (dobIndexes.length) sendDOB(dobIndexes, quotes, fullName, email).catch(console.error);
+    if (dobIndexes.length) sendDOB(dobIndexes, fullName, email).catch(console.error);
     if (dojIndexes.length) sendDOJ(dojIndexes, fullName, email, title, doj).catch(console.error);
   } catch (error) {
     console.error("[-] Error reading Google Sheets:", error);
@@ -54,9 +59,27 @@ export async function main(): Promise<void> {
 // main();
 
 export async function sendQOD() {
-  let qod = await getQuoteOfTheDay();
+  const categories = [
+    "inspirational",
+    "intelligence",
+    "knowledge",
+    "life",
+    "success",
+    "happiness",
+    "hope",
+    "freedom",
+    "failure",
+    "family",
+    "dreams",
+    "health",
+    "imagination",
+  ];
+  const randomEl = generateRandomNumber(0, categories.length - 1);
+  let qod = await getQuotes(categories[randomEl]);
 
   qod = formatString(qod, 80, 15);
+
+  // console.log(qod);
 
   await sendSlackMessage(`Dear Team, Good Morning!
         \nToday's Thought
