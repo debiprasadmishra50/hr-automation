@@ -262,86 +262,183 @@ export function wait(secs: number): Promise<boolean> {
 }
 
 /**
- * Formats a string by surrounding it with "+" characters and applying specific formatting rules.
- * @param str The string to be formatted.
- * @returns The formatted string with proper borders, center alignment, and word wrapping.
+ * Formats a string to fit within a specified maximum line length, optionally also limiting the
+ * maximum number of words per line. Outputs the string within a bordered box shape.
+ *
+ * @param str - The input string that needs to be formatted.
+ * @param maxLineLength - The maximum allowed length of a line, including padding and borders (Default: 120).
+ * @param maxWordsPerLine - The maximum number of words allowed per line (Default: 28).
+ * @returns The formatted string with lines wrapped according to the specified lengths and applied borders.
  */
 export function formatString(str: string, maxLineLength = 120, maxWordsPerLine = 28): string {
-  // Maximum line length and words per line
-  // const maxLineLength = 120;
-  // const maxWordsPerLine = 28;
-  // Border character
+  // Character used for creating the border around the text
   const borderChar = "#";
 
-  // Split the string into words
+  // Split the input string into an array of words
   const words = str.trim().split(/\s+/);
 
-  // Create an array to hold the formatted lines
-  const lines: string[] = [];
+  // To determine the maximum width of the content based on the words
+  let maxWidth = 0;
 
   /**
-   * Generates a formatted line with centered content.
-   * @param content The content to be centered.
-   * @returns The formatted line with centered content.
+   * Wraps words into lines according to the constraints of `maxLineLength` and `maxWordsPerLine`.
+   *
+   * @param words - An array of words to be wrapped into lines.
+   * @returns An array of strings where each element represents a single line.
+   */
+  const wrapWordsIntoLines = (words: string[]): string[] => {
+    let currentLineWords: string[] = [];
+    const lines: string[] = [];
+
+    words.forEach((word, index) => {
+      // Join current line words with a new word to test if it fits
+      const testLine = [...currentLineWords, word].join(" ");
+      if (testLine.length <= maxLineLength - 4 && currentLineWords.length < maxWordsPerLine) {
+        // 4 spaces for padding and borders
+        currentLineWords.push(word);
+      } else {
+        // Line exceeded either max length or word count, start a new line
+        lines.push(currentLineWords.join(" "));
+        currentLineWords = [word];
+      }
+
+      if (index === words.length - 1 && currentLineWords.length) {
+        // Add the last line if there are any remaining words
+        lines.push(currentLineWords.join(" "));
+      }
+    });
+
+    return lines;
+  };
+
+  // Wrap words into lines based on the current settings
+  const wrappedLines = wrapWordsIntoLines(words);
+
+  // Determine the maximum width based on the longest content line
+  wrappedLines.forEach((line) => {
+    if (line.length + 2 > maxWidth) {
+      // +2 for the extra spaces on both sides inside the border
+      maxWidth = line.length + 2;
+    }
+  });
+
+  // Adjust maxWidth to include padding and borders while ensuring at least 1 space on both sides
+  maxWidth = maxWidth + 2 <= maxLineLength ? maxWidth + 2 : maxLineLength; // +2 for borders
+
+  /**
+   * Generates a single line formatted with borders and equal padding on both sides.
+   *
+   * @param content - The content of the line to be bordered and padded.
+   * @returns The formatted line with borders and padding.
    */
   const generateLine = (content: string): string => {
-    // Calculate the padding length
-    const paddingLength = maxLineLength - content.length - 2;
+    // Ensure there's at least one space on both sides if the content is shorter than maxLineLength
+    const contentWithSpace = ` ${content} `;
+    const paddingLength = maxWidth - contentWithSpace.length - 2; // -2 for borders
     const leftPadding = Math.floor(paddingLength / 2);
     const rightPadding = Math.ceil(paddingLength / 2);
-    // Construct the formatted line
-    return `${borderChar}${" ".repeat(leftPadding)}${content}${" ".repeat(rightPadding)}${borderChar}`;
+    return `${borderChar}${" ".repeat(leftPadding)}${contentWithSpace}${" ".repeat(
+      rightPadding
+    )}${borderChar}`;
   };
 
-  /**
-   * Wraps words into paragraphs to fit within the line length.
-   * @param words The words to be wrapped.
-   * @returns The paragraphs containing the wrapped words.
-   */
-  const wrapWordsIntoParagraphs = (words: string[]): string[] => {
-    const paragraphs: string[] = [];
-    let currentLine = "";
+  const lines: string[] = [];
+  // Create the top border
+  lines.push(borderChar.repeat(maxWidth));
 
-    for (const word of words) {
-      // Check if adding the current word exceeds the line length
-      if ((currentLine + word).length > maxLineLength - 4) {
-        // Add the current line to paragraphs and start a new line
-        paragraphs.push(currentLine);
-        currentLine = "";
-      }
-      // Append the word to the current line
-      currentLine += `${word} `;
-    }
+  // Add each line with space padding and borders
+  wrappedLines.forEach((paragraph) => {
+    lines.push(generateLine(paragraph));
+  });
 
-    // Add the remaining line to paragraphs
-    if (currentLine) {
-      paragraphs.push(currentLine);
-    }
+  // Create the bottom border
+  lines.push(borderChar.repeat(maxWidth));
 
-    return paragraphs;
-  };
-
-  // Wrap words into paragraphs if necessary
-  const paragraphs = wrapWordsIntoParagraphs(words);
-
-  // Add the top border
-  lines.push(borderChar.repeat(maxLineLength));
-
-  // Add the content lines
-  for (const paragraph of paragraphs) {
-    const paragraphLines = Math.ceil(paragraph.length / maxLineLength);
-    for (let i = 0; i < paragraphLines; i++) {
-      const start = i * maxLineLength;
-      const end = start + maxLineLength;
-      const lineContent = paragraph.substring(start, end).trim();
-      // Generate and add the formatted line
-      lines.push(generateLine(lineContent));
-    }
-  }
-
-  // Add the bottom border
-  lines.push(borderChar.repeat(maxLineLength));
-
-  // Join the lines and return the formatted string
+  // Return the full formatted string
   return lines.join("\n");
 }
+
+// /**
+//  * Formats a string by surrounding it with "+" characters and applying specific formatting rules.
+//  * @param str The string to be formatted.
+//  * @returns The formatted string with proper borders, center alignment, and word wrapping.
+//  */
+// export function formatString(str: string, maxLineLength = 120, maxWordsPerLine = 28): string {
+//   // Maximum line length and words per line
+//   // const maxLineLength = 120;
+//   // const maxWordsPerLine = 28;
+//   // Border character
+//   const borderChar = "#";
+
+//   // Split the string into words
+//   const words = str.trim().split(/\s+/);
+
+//   // Create an array to hold the formatted lines
+//   const lines: string[] = [];
+
+//   /**
+//    * Generates a formatted line with centered content.
+//    * @param content The content to be centered.
+//    * @returns The formatted line with centered content.
+//    */
+//   const generateLine = (content: string): string => {
+//     // Calculate the padding length
+//     const paddingLength = maxLineLength - content.length - 2;
+//     const leftPadding = Math.floor(paddingLength / 2);
+//     const rightPadding = Math.ceil(paddingLength / 2);
+//     // Construct the formatted line
+//     return `${borderChar}${" ".repeat(leftPadding)}${content}${" ".repeat(rightPadding)}${borderChar}`;
+//   };
+
+//   /**
+//    * Wraps words into paragraphs to fit within the line length.
+//    * @param words The words to be wrapped.
+//    * @returns The paragraphs containing the wrapped words.
+//    */
+//   const wrapWordsIntoParagraphs = (words: string[]): string[] => {
+//     const paragraphs: string[] = [];
+//     let currentLine = "";
+
+//     for (const word of words) {
+//       // Check if adding the current word exceeds the line length
+//       if ((currentLine + word).length > maxLineLength - 4) {
+//         // Add the current line to paragraphs and start a new line
+//         paragraphs.push(currentLine);
+//         currentLine = "";
+//       }
+//       // Append the word to the current line
+//       currentLine += `${word} `;
+//     }
+
+//     // Add the remaining line to paragraphs
+//     if (currentLine) {
+//       paragraphs.push(currentLine);
+//     }
+
+//     return paragraphs;
+//   };
+
+//   // Wrap words into paragraphs if necessary
+//   const paragraphs = wrapWordsIntoParagraphs(words);
+
+//   // Add the top border
+//   lines.push(borderChar.repeat(maxLineLength));
+
+//   // Add the content lines
+//   for (const paragraph of paragraphs) {
+//     const paragraphLines = Math.ceil(paragraph.length / maxLineLength);
+//     for (let i = 0; i < paragraphLines; i++) {
+//       const start = i * maxLineLength;
+//       const end = start + maxLineLength;
+//       const lineContent = paragraph.substring(start, end).trim();
+//       // Generate and add the formatted line
+//       lines.push(generateLine(lineContent));
+//     }
+//   }
+
+//   // Add the bottom border
+//   lines.push(borderChar.repeat(maxLineLength));
+
+//   // Join the lines and return the formatted string
+//   return lines.join("\n");
+// }
