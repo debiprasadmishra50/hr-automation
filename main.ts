@@ -77,7 +77,7 @@ export async function sendQOD() {
   const randomEl = generateRandomNumber(0, categories.length - 1);
   let qod = await getQuotes(categories[randomEl]);
 
-  qod = formatString(qod, 80, 15);
+  // qod = formatString(qod, 80, 15);
 
   // console.log(qod);
 
