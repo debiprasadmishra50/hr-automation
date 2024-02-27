@@ -63,7 +63,7 @@ export async function sendDOB(dobIndexes: number[], fullName: string[], email: s
   try {
     for (const i of dobIndexes) {
       const chosenTemp = generateRandomNumber(1, 5);
-      const quote: string = await getQuotes("inspirational");
+      const { quote, author } = await getQuotes("inspirational");
 
       // const quote = quotes[i <= 4 ? i : i % 4];
 
@@ -76,6 +76,7 @@ export async function sendDOB(dobIndexes: number[], fullName: string[], email: s
       await sendSlackMessage(`Happy Birthday ${fullName[i]} :birthday: :tada: :cake: :confetti_ball:
           \nHope this message will glorify this marvellous day!
           \n${formatString(quote, 80, 15)}
+          \n -- ${author}
           \nEnjoy the day ${fullName[i].split(" ")[0]}!`).catch(console.error);
 
       // console.log(`Happy Birthday ${fullName[i]} :birthday: :tada: :cake: :confetti_ball:
@@ -180,8 +181,9 @@ export async function getQuotes(category: string) {
     // writeFileSync("./templates/quote.txt", quotes.join("\n"), { encoding: "utf-8" });
 
     console.log("[+] Successfully fetched quotes", getCurrentDate());
+    const { quote, author } = res.data[0];
 
-    return res.data[0].quote;
+    return { quote, author };
   } catch (err) {
     console.error("[-] Error getting today's quote:", err.message);
   }
