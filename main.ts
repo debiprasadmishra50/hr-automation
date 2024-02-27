@@ -69,21 +69,25 @@ export async function sendQOD() {
     "hope",
     "freedom",
     "failure",
-    "family",
+    // "family",
     "dreams",
     "health",
     "imagination",
   ];
   const randomEl = generateRandomNumber(0, categories.length - 1);
-  let qod = await getQuotes(categories[randomEl]);
+  let { quote, author } = await getQuotes(categories[randomEl]);
 
-  qod = formatString(qod, 80, 15);
+  // qod = formatString(qod, 80, 15);
 
-  // console.log(qod);
+  // console.log(`Dear Team, Good Morning!
+  //       \nToday's Thought
+  //       \n${quote}
+  //       \n -- ${author}`);
 
   await sendSlackMessage(`Dear Team, Good Morning!
         \nToday's Thought
-        \n${qod}`);
+        \n${quote}
+        \n -- ${author}`);
 }
 
 // // run at 08:45 AM everyday
@@ -104,8 +108,12 @@ export async function sendQOD() {
 // qod.start();
 // dobAndDoj.start();
 
-// deleteMessage("1685572812.823279");
+/* 
 
-// sendSlackMessage(
-//   `My fellow colleagues, as you are aware, I am undergoing development. Please ignore any test messages that you may receive from me for the next few days. I will inform you once I am ready.`
-// ).catch(console.error);
+  // deleteMessage("1685572812.823279");
+
+  // sendSlackMessage(
+  //   `My fellow colleagues, as you are aware, I am undergoing development. Please ignore any test messages that you may receive from me for the next few days. I will inform you once I am ready.`
+  // ).catch(console.error);
+  
+*/
